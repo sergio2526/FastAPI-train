@@ -23,6 +23,17 @@ class Person(BaseModel):
     hair_color: Optional[str] = None
     is_married: Optional[bool] = None
 
+    #Ejemplo por defecto en el body
+    class Config:
+        schema_extra = {
+            "example":{
+                "first_name":"sergio",
+                "last_name": "Rubiano",
+                "age":17,
+                "hair_color":"black",
+                "is_married":True
+            }
+        }
 
 @app.get("/")
 def home():
@@ -65,3 +76,4 @@ def show_person(
         ),
 ):
     return {person_id: "It exists!"}
+
