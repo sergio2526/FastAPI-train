@@ -1,8 +1,7 @@
 #Python
 from typing import Optional
 from enum import Enum
-from fastapi.datastructures import Default, UploadFile
-from fastapi.param_functions import File, Form, Header
+
 
 #Pydantic
 from pydantic import BaseModel
@@ -12,8 +11,9 @@ from pydantic import EmailStr
 #FastAPI
 from fastapi import FastAPI
 from fastapi import status
+from fastapi import HTTPException
 from fastapi import Body, Query, Path, Form, Header, Cookie, UploadFile, File
-from starlette.status import HTTP_201_CREATED
+
 
 app = FastAPI()
 
@@ -107,14 +107,22 @@ def show_person(
 
 # Validaciones: Path Parameters
 
+persons = [1,2,3,4,5]
+
 @app.get(path="/person/detail/{person_id}",status_code=status.HTTP_200_OK)
 def show_person(
     person_id: int = Path(
         ..., 
-        gt=0,
+        gt=0, #tiene que ser mayor a 0
         example=123
         )
 ): 
+    if person_id not in persons:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail="This person doesn't exist!"
+        )
+
     return {person_id: "It exists!"}
 
 # Validaciones: Request Body
