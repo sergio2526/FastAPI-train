@@ -80,13 +80,22 @@ def home():
 
 # Request and Response Body
 
-@app.post(path="/person/new", response_model=PersonOut, status_code=status.HTTP_201_CREATED)
+@app.post(
+    path="/person/new",
+    response_model=PersonOut,
+    status_code=status.HTTP_201_CREATED,
+    tags=["Persons"])
+
 def create_person(person: Person = Body(...)): 
     return person
 
 # Validaciones: Query Parameters
 
-@app.get(path="/person/detail", status_code=status.HTTP_200_OK)
+@app.get(
+path="/person/detail",
+status_code=status.HTTP_200_OK,
+tags=["Persons"])
+
 def show_person(
     name: Optional[str] = Query(
         None,
@@ -109,7 +118,10 @@ def show_person(
 
 persons = [1,2,3,4,5]
 
-@app.get(path="/person/detail/{person_id}",status_code=status.HTTP_200_OK)
+@app.get(
+    path="/person/detail/{person_id}",
+    status_code=status.HTTP_200_OK,
+    tags=["Persons"])
 def show_person(
     person_id: int = Path(
         ..., 
@@ -127,14 +139,18 @@ def show_person(
 
 # Validaciones: Request Body
 
-@app.put(path="/person/{person_id}",status_code=status.HTTP_200_OK)
+@app.put(
+    path="/person/{person_id}",
+    status_code=status.HTTP_200_OK,
+    tags=["Persons"])
 def update_person(
     person_id: int = Path(
         ...,
         title="Person ID",
         description="This is the person ID",
         gt=0,
-        example=123
+        example=123,
+        
     ),
     person: Person = Body(...),
     #location: Location = Body(...)
@@ -148,7 +164,8 @@ def update_person(
 @app.post(
     path='/login',
     response_model=LoginOut,
-    status_code=status.HTTP_200_OK
+    status_code=status.HTTP_200_OK,
+    tags=["login"]
 )
 def login(username: str =  Form(...), password: str = Form(...)):
     return LoginOut(username=username)
@@ -158,6 +175,7 @@ def login(username: str =  Form(...), password: str = Form(...)):
 @app.post(
     path='/contact',
     status_code=status.HTTP_200_OK,
+    tags=["contact"]
 )
 def concat(
     first_name: str = Form(
@@ -185,7 +203,8 @@ def concat(
 # Files
 
 @app.post(
-    path='/post-image'
+    path='/post-image',
+    tags=["post"]
 )
 def post_image(
     image: UploadFile = File(...)
